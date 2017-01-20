@@ -9,64 +9,118 @@
 	<artifactId>target-definition-dsl-example</artifactId>
 	<version>1.0.0-SNAPSHOT</version>
 
-	<packaging>pom</packaging>
+	<packaging>eclipse-target-definition</packaging>
 
 	<properties>
-		<tycho.version>0.25.0</tycho.version>
+		<tycho.version>0.26.0</tycho.version>
 		<tycho.extras.version>${tycho.version}</tycho.extras.version>
+		<!-- <tycho.extras.version>0.25.0</tycho.extras.version> -->
 		<eclipse-mars-releases.url>http://www-artifactory:8081/artifactory/org.eclipse.updates.mars.201602261000/</eclipse-mars-releases.url>
 		<targetPlatform.application.feature>fr.obeo.releng.targetplatform-feature</targetPlatform.application.feature>
 		<obeo-releng-tools-releases.url>http://www-artifactory:8081/artifactory/obeo-releng-tools-releases/</obeo-releng-tools-releases.url>
 		<targetPlatform.application.name>fr.obeo.releng.targetplatform.targetPlatform.converter</targetPlatform.application.name>
-		<targetPlatform.application.args>eclipse-mars.tpd</targetPlatform.application.args>
+		<!-- <targetPlatform.application.args>target/eclipse/${project.artifactId}.tpd</targetPlatform.application.args> -->
+		<targetPlatform.application.args>${project.artifactId}.tpd</targetPlatform.application.args>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 	</properties>
 
 	<build>
-	<plugins>
-		<plugin>
-			<groupId>org.eclipse.tycho.extras</groupId>
-			<artifactId>tycho-eclipserun-plugin</artifactId>
-			<version>${tycho.extras.version}</version>
-			<executions>
-				<execution>
-					<phase>process-resources</phase>
-					<goals>
-						<goal>eclipse-run</goal>
-					</goals>
-				</execution>
-			</executions>
-			<configuration>
-				<repositories>
-					<repository>
-						<id>eclipse-mars-releases</id>
-						<layout>p2</layout>
-						<url>${eclipse-mars-releases.url}</url>
-					</repository>
-					<repository>
-						<id>obeo-releng-tools-releases</id>
-						<layout>p2</layout>
-						<url>${obeo-releng-tools-releases.url}</url>
-					</repository>
-				</repositories>
-				<applicationsArgs>
-					<args>-consoleLog</args>
-					<args>-application</args>
-					<args>${targetPlatform.application.name}</args>
-					<args>${targetPlatform.application.args}</args>
-				</applicationsArgs>
-				<dependencies>
-					<dependency>
-						<artifactId>${targetPlatform.application.feature}</artifactId>
-						<type>eclipse-feature</type>
-					</dependency>
-					<dependency>
-						<artifactId>org.eclipse.equinox.p2.sdk</artifactId>
-						<type>eclipse-feature</type>
-					</dependency>
-				</dependencies>
-			</configuration>
-		</plugin>
-	</plugins>
+		<plugins>
+			<plugin>
+				<artifactId>maven-clean-plugin</artifactId>
+				<version>3.0.0</version>
+				<configuration>
+					<filesets>
+						<fileset>
+							<directory>${basedir}</directory>
+							<includes>
+								<include>*.target</include>
+							</includes>
+						</fileset>
+					</filesets>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.eclipse.tycho</groupId>
+				<artifactId>tycho-maven-plugin</artifactId>
+				<version>${tycho.version}</version>
+				<extensions>true</extensions>
+			</plugin>
+<!-- 			<plugin> -->
+<!-- 				<artifactId>maven-resources-plugin</artifactId> -->
+<!-- 				<executions> -->
+<!-- 					<execution> -->
+<!-- 						<id>copy-and-filter-resources</id> -->
+<!-- 						<phase>generate-resources</phase> -->
+<!-- 						<goals> -->
+<!-- 							<goal>copy-resources</goal> -->
+<!-- 						</goals> -->
+<!-- 						<configuration> -->
+<!-- 							<outputDirectory>${project.build.directory}/eclipse</outputDirectory> -->
+<!-- 							<resources> -->
+<!-- 								<resource> -->
+<!-- 									<directory>src/main/resources</directory> -->
+<!-- 									<filtering>true</filtering> -->
+<!-- 									<includes> -->
+<!-- 										<include>**/*.tpd</include> -->
+<!-- 									</includes> -->
+<!-- 								</resource> -->
+<!-- 							</resources> -->
+<!-- 						</configuration> -->
+<!-- 					</execution> -->
+<!-- 				</executions> -->
+<!-- 			</plugin> -->
+			<plugin>
+				<groupId>org.eclipse.tycho.extras</groupId>
+				<artifactId>tycho-eclipserun-plugin</artifactId>
+				<version>${tycho.extras.version}</version>
+				<executions>
+					<execution>
+						<phase>process-resources</phase>
+						<goals>
+							<goal>eclipse-run</goal>
+						</goals>
+					</execution>
+				</executions>
+				<configuration>
+					<repositories>
+						<repository>
+							<id>eclipse-mars-releases</id>
+							<layout>p2</layout>
+							<url>${eclipse-mars-releases.url}</url>
+						</repository>
+						<repository>
+							<id>obeo-releng-tools-releases</id>
+							<layout>p2</layout>
+							<url>${obeo-releng-tools-releases.url}</url>
+						</repository>
+					</repositories>
+					<applicationsArgs>
+						<args>-consoleLog</args>
+						<args>-application</args>
+						<args>${targetPlatform.application.name}</args>
+						<args>${targetPlatform.application.args}</args>
+					</applicationsArgs>
+					<dependencies>
+						<dependency>
+							<artifactId>${targetPlatform.application.feature}</artifactId>
+							<type>eclipse-feature</type>
+						</dependency>
+						<dependency>
+							<artifactId>org.eclipse.equinox.p2.sdk</artifactId>
+							<type>eclipse-feature</type>
+						</dependency>
+					</dependencies>
+				</configuration>
+			</plugin>
+			<!-- <plugin> -->
+			<!-- <groupId>org.eclipse.tycho</groupId> -->
+			<!-- <artifactId>tycho-packaging-plugin</artifactId> -->
+			<!-- <version>${tycho.version}</version> -->
+			<!-- <configuration> -->
+			<!-- <source>${project.build.directory}/eclipse</source> -->
+			<!-- </configuration> -->
+			<!-- </plugin> -->
+		</plugins>
 	</build>
 </project>
