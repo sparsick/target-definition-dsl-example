@@ -5,7 +5,7 @@ with source allEnvironments
 /**
  * Eclipse Mars (4.5.x) releases.
  */
-location eclipse-mars-releases "http://www-artifactory:8081/artifactory/eclipse-mars-releases/" {
+location eclipse-mars-releases "http://www-artifactory:8081/artifactory/eclipse-mars-virtual-repo/" { // Proxied repository that fails the build
 
 	com.google.gson
 	
